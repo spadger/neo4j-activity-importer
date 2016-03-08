@@ -1,0 +1,49 @@
+﻿<Window x:Class="DependencyImporter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DependencyImporter"
+        mc:Ignorable="d"
+        Title="Dependency Importer" Height="260" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0">Server</Label>
+        <TextBox Name="txtServer" Grid.Column="1" Grid.Row="0" Text="http://localhost:7474/db/data" />
+
+        <Label Grid.Column="0" Grid.Row="1">Username</Label>
+        <TextBox Name="txtUsername" Grid.Column="1" Grid.Row="1" Text="neo4j" />
+
+        <Label Grid.Column="0" Grid.Row="2">Password</Label>
+        <PasswordBox Name="txtPassword" Grid.Column="1" Grid.Row="2" />
+
+        <Label Grid.Column="0" Grid.Row="3">Operation</Label>
+        <ComboBox Name="cboAction" Grid.Column="1" Grid.Row="3" SelectedIndex="0">
+            <ListBoxItem>Import data</ListBoxItem>
+            <ListBoxItem>Import play set</ListBoxItem>
+            <ListBoxItem>Test Dataset</ListBoxItem>
+            <ListBoxItem>Delete all</ListBoxItem>
+        </ComboBox>
+
+        <Button Name="btnDo" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Height="30" Margin="0,10,0,0" Click="btnDo_Click">Do!</Button>
+        <Button Name="btnCancel" IsEnabled="false"   Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Height="30" Margin="0,10,0,0" Click="btnCancel_Click">Cancel</Button>
+        <ProgressBar Name="prgProgress" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Height="30" Margin="0,10,0,0" />
+        <TextBlock Name="txtProgress" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Height="30" Margin="0,10,0,0"  HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+    </Grid>
+</Window>
