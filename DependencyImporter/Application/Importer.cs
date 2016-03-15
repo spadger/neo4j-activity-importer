@@ -56,7 +56,13 @@ namespace DependencyImporter.Application
                 var from = nodeReferences[MakeKey(values[0], values[1])];
                 var to = nodeReferences[MakeKey(values[2], values[3])];
 
-                _storageProvider.CreateRelationship(from, new Preceeds(to));
+                var relationshipType = values[4];
+                var freeFloat = decimal.Parse(values[5]);
+                var driving = values[6]=="Yes";
+                var critical = values[7]=="Yes";
+                var lag = string.IsNullOrEmpty(values[8])?0: int.Parse(values[8]);
+
+                _storageProvider.CreateRelationship(from, new Preceeds(to, relationshipType, freeFloat, driving, critical, lag));
 
                 if (++i % 20 == 0)
                 {
