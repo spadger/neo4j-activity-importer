@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using DependencyImporter.Application.Entities;
 using Neo4jClient;
 
 namespace DependencyImporter.Application.Storage
@@ -15,10 +16,10 @@ namespace DependencyImporter.Application.Storage
             return new RelationshipReference(value);
         }
 
-        public NodeReference<TNode> Create<TNode>(TNode node, params IRelationshipAllowingParticipantNode<TNode>[] relationships) where TNode : class
+        public NodeReference<Activity> Create(Activity activity)
         {
             var value = Interlocked.Increment(ref count);
-            return new NodeReference<TNode>(value);
+            return new NodeReference<Activity>(value);
         }
 
         public Task DeleteAllAsync()

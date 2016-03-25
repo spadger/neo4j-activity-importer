@@ -8,7 +8,7 @@ namespace DependencyImporter.Application.Entities
         public Preceeds(NodeReference targetNode, PreceedsPayload payload) : base(targetNode, payload)
         {}
 
-        public override string RelationshipTypeKey => "Preceeds";
+        public override string RelationshipTypeKey => ((PreceedsPayload)Data).RelationshipType;
     }
 
     public class PreceedsPayload

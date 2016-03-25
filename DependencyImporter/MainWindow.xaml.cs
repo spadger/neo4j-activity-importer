@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using CsvHelper.Configuration;
 using DependencyImporter.Application;
 using DependencyImporter.Application.Entities;
 using DependencyImporter.Application.Storage;
@@ -83,11 +84,11 @@ namespace DependencyImporter
 
             var edgeDefinitions = new[]
             {
-                "A,A,B,B",
-                "B,B,C,C",
-                "C,C,D,D,", 
-                "D,D,E,E,",
-                "A,A,E,E"
+                "A,A,B,B,FS,0,Yes,No,0",
+                "B,B,C,C,FS,0,Yes,No,0",
+                "C,C,D,D,FS,0,Yes,No,0,", 
+                "D,D,E,E,FS,0,Yes,No,0,",
+                "A,A,E,E,FS,0,Yes,No,0"
             };
 
             var importer = new Importer(GetStorage());
@@ -114,15 +115,16 @@ namespace DependencyImporter
                 txtProgress.Text = p.Message;
             };
 
-            var activities = File.ReadAllLines(@".\Activities.csv")
-                .Select(l => l.Split(','))
-                .Select(x => new Activity(x[0], x[1], x[2], x[3]));
-
-            var edgeDefinitions = File.ReadAllLines(@".\Relationships.csv");
-
             var importer = new Importer(storage);
 
-            await Task.Run(() => importer.Import(activities, edgeDefinitions, progress, cts.Token));
+            using (var reader = File.OpenText(@".\Activities.csv"))
+            using(var csvReader = new CsvHelper.CsvReader(reader))
+            {
+                var activities = csvReader.GetRecords<Activity>().ToList();
+                var edgeDefinitions = File.ReadAllLines(@".\Relationships.csv");
+
+                await Task.Run(() => importer.Import(activities, edgeDefinitions, progress, cts.Token));
+            }
         }
 
         private Neo4JStorageProvider GetStorage()

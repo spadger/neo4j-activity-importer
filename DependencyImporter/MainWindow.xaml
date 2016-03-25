@@ -30,7 +30,7 @@
         <TextBox Name="txtUsername" Grid.Column="1" Grid.Row="1" Text="neo4j" />
 
         <Label Grid.Column="0" Grid.Row="2">Password</Label>
-        <PasswordBox Name="txtPassword" Grid.Column="1" Grid.Row="2" />
+        <PasswordBox Name="txtPassword" Grid.Column="1" Grid.Row="2" Password="test" />
 
         <Label Grid.Column="0" Grid.Row="3">Operation</Label>
         <ComboBox Name="cboAction" Grid.Column="1" Grid.Row="3" SelectedIndex="0">

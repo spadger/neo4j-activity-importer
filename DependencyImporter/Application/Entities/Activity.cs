@@ -2,7 +2,7 @@
 
 namespace DependencyImporter.Application.Entities
 {
-    public class Activity :  IEquatable<Activity>
+    public class Activity : IEquatable<Activity>
     {
         public Activity(string projectId, string activityId, string name, string type)
         {
@@ -12,7 +12,9 @@ namespace DependencyImporter.Application.Entities
             Type = type;
         }
 
-        public string ProjectId { get; set; }
+        public Activity() { }
+
+    public string ProjectId { get; set; }
         public string ActivityId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }

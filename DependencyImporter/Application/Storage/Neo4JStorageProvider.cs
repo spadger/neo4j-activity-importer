@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using DependencyImporter.Application.Entities;
 using Neo4jClient;
 
 namespace DependencyImporter.Application.Storage
@@ -24,9 +26,16 @@ namespace DependencyImporter.Application.Storage
             return _graphClient.CreateRelationship(sourceNodeReference, relationship);
         }
 
-        public NodeReference<TNode> Create<TNode>(TNode node, params IRelationshipAllowingParticipantNode<TNode>[] relationships) where TNode : class
+        public NodeReference<Activity> Create(Activity activity)
         {
-            return _graphClient.Create(node, relationships);
+            var node =_graphClient.Cypher
+                .Create($"(act:{activity.Type.Replace(' ', '_')} {{act}})")
+                .WithParam("act", activity)
+                .Return(act => act.Node<Activity>())
+                .Results
+                .Single();
+
+            return node.Reference;
         }
 
         public async Task DeleteAllAsync()

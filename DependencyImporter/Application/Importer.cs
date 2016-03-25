@@ -36,6 +36,7 @@ namespace DependencyImporter.Application
                 }
 
                 var nodeReference = _storageProvider.Create(activity);
+
                 nodeReferences.Add(MakeKey(activity), nodeReference);
 
                 if (++i % 20 == 0)
