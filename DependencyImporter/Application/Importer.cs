@@ -62,14 +62,19 @@ namespace DependencyImporter.Application
                 var critical = values[7]=="Yes";
                 var lag = string.IsNullOrEmpty(values[8])?0: int.Parse(values[8]);
 
-                _storageProvider.CreateRelationship(from, new Preceeds(to, relationshipType, freeFloat, driving, critical, lag));
+                var payload = new PreceedsPayload(relationshipType, freeFloat, driving, critical, lag);
 
-                if (++i % 20 == 0)
+                _storageProvider.CreateRelationship(from, new Preceeds(to, payload));
+
+                if (++i%20 == 0)
                 {
                     importProgress.CompletedItems = i;
                     progress.Report(importProgress);
                 }
             }
+
+            importProgress.CompletedItems = i;
+            progress.Report(importProgress);
         }
 
         public async Task DeleteAll()
