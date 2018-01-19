@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -68,18 +69,18 @@ namespace DependencyImporter
 
         private async Task Import()
         {
-            await ImportInternal(GetStorage());
+            await ImportInternal(GetStorage(), x=> throw new Exception(x));
         }
 
         private async Task Play()
         {
             var activities = new[]
             {
-                new Activity("a", "a", "a", "a"),
-                new Activity("b", "b", "b", "b"),
-                new Activity("c", "c", "c", "c"),
-                new Activity("d", "d", "d", "d"),
-                new Activity("e", "e", "e", "e"),
+                new Activity("a", "a", "a", "a", true),
+                new Activity("b", "b", "b", "b", true),
+                new Activity("c", "c", "c", "c", true),
+                new Activity("d", "d", "d", "d", true),
+                new Activity("e", "e", "e", "e", true),
             };
 
             var edgeDefinitions = new[]
@@ -91,21 +92,29 @@ namespace DependencyImporter
                 "A,A,E,E,FS,0,Yes,No,0"
             };
 
-            var importer = new Importer(GetStorage());
+            var importer = new Importer(GetStorage(), x => throw new Exception(x));
             await Task.Run(()=>importer.Import(activities, edgeDefinitions, new Progress<ImportProgress>(), cts.Token));
         }
 
         private async Task Test()
         {
-            await ImportInternal(new FakeStorageProvider());
+            var errors = new List<string>();
+            await ImportInternal(new FakeStorageProvider(), errors.Add);
+
+            if (errors.Any())
+            {
+                var errorWIndow = new Errors();
+                errorWIndow.SetErrors(errors);
+                errorWIndow.ShowDialog();
+            }
         }
 
         private async Task Delete()
         {
-            await new Importer(GetStorage()).DeleteAll();
+            await GetStorage().DeleteAllAsync();
         }
 
-        private async Task ImportInternal(IProvideStorage storage)
+        private async Task ImportInternal(IProvideStorage storage, Action<string> errorHandler)
         {
 
             var progress = new Progress<ImportProgress>();
@@ -115,13 +124,13 @@ namespace DependencyImporter
                 txtProgress.Text = p.Message;
             };
 
-            var importer = new Importer(storage);
+            var importer = new Importer(storage, errorHandler);
 
             using (var reader = File.OpenText(@".\Activities.csv"))
             using(var csvReader = new CsvHelper.CsvReader(reader))
             {
                 var activities = csvReader.GetRecords<Activity>().ToList();
-                var edgeDefinitions = File.ReadAllLines(@".\Relationships.csv");
+                var edgeDefinitions = File.ReadAllLines(@".\Relationships.csv").Skip(1).ToArray();
 
                 await Task.Run(() => importer.Import(activities, edgeDefinitions, progress, cts.Token));
             }

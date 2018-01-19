@@ -24,7 +24,7 @@ namespace DependencyImporter.Application.Storage
 
         public Task DeleteAllAsync()
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
     }
 }

@@ -79,6 +79,10 @@
     <Compile Include="Application\Storage\FakeStorageProvider.cs" />
     <Compile Include="Application\Storage\IProvideStorage.cs" />
     <Compile Include="Application\Storage\Neo4JStorageProvider.cs" />
+    <Page Include="Errors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -89,6 +93,9 @@
     </Compile>
     <Compile Include="Application\Entities\Activity.cs" />
     <Compile Include="Application\Entities\Preceeds.cs" />
+    <Compile Include="Errors.xaml.cs">
+      <DependentUpon>Errors.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

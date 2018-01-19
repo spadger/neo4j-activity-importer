@@ -12,10 +12,12 @@ namespace DependencyImporter.Application
     public class Importer
     {
         private readonly IProvideStorage _storageProvider;
+        private readonly Action<string> _errorHandler;
 
-        public Importer(IProvideStorage storageProvider)
+        public Importer(IProvideStorage storageProvider, Action<string> errorHandler)
         {
             _storageProvider = storageProvider;
+            _errorHandler = errorHandler;
         }
 
         public void Import(IEnumerable<Activity> activityStream, string[] edgeDefninitions, IProgress<ImportProgress> progress, CancellationToken cancellationToken)
@@ -46,16 +48,29 @@ namespace DependencyImporter.Application
                 }
             }
 
-            foreach (var edgeDefinition in edgeDefninitions)
+            for (var relationshipLine = 0; relationshipLine < edgeDefninitions.Length; relationshipLine++)
             {
+                var edgeDefinition = edgeDefninitions[relationshipLine];
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
 
                 var values = edgeDefinition.Split(',').Select(x => x.Trim()).ToArray();
-                var from = nodeReferences[MakeKey(values[0], values[1])];
-                var to = nodeReferences[MakeKey(values[2], values[3])];
+
+                var fromKey = MakeKey(values[0], values[1]);
+                if (!nodeReferences.TryGetValue(fromKey, out var from))
+                {
+                    _errorHandler($"Could not find source activity '{fromKey}' in line #{relationshipLine + 2}: '{edgeDefinition}'");
+                    continue;
+                }
+
+                var toKey = MakeKey(values[2], values[3]);
+                if (!nodeReferences.TryGetValue(toKey, out var to))
+                {
+                    _errorHandler($"Could not find destination activity '{toKey}' in line #{relationshipLine + 2}: '{edgeDefinition}'");
+                    continue;
+                }
 
                 var relationshipType = values[4];
                 var freeFloat = decimal.Parse(values[5]);
@@ -76,11 +91,6 @@ namespace DependencyImporter.Application
 
             importProgress.CompletedItems = i;
             progress.Report(importProgress);
-        }
-
-        public async Task DeleteAll()
-        {
-            await _storageProvider.DeleteAllAsync();
         }
 
         public static string MakeKey(Activity activity)

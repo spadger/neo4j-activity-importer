@@ -4,12 +4,13 @@ namespace DependencyImporter.Application.Entities
 {
     public class Activity : IEquatable<Activity>
     {
-        public Activity(string projectId, string activityId, string name, string type)
+        public Activity(string projectId, string activityId, string name, string type, bool critical)
         {
             ProjectId = projectId.Trim().ToUpper();
             ActivityId = activityId.Trim().ToUpper();
             Name = name;
             Type = type;
+            Critical = critical;
         }
 
         public Activity() { }
@@ -18,6 +19,7 @@ namespace DependencyImporter.Application.Entities
         public string ActivityId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public bool Critical { get; set; }
 
         public bool Equals(Activity other)
         {

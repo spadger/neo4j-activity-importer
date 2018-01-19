@@ -3,3 +3,4 @@ DependencyImporter/bin/
 DependencyImporter/obj/
 DependencyImporter/packages/
 *.suo
+/DependencyImporter/.vs/
