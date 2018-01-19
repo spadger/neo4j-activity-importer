@@ -126,8 +126,11 @@ namespace DependencyImporter
 
             var importer = new Importer(storage, errorHandler);
 
+            var csvConfig = new Configuration();
+            csvConfig.RegisterClassMap<ActivityMap>();
+
             using (var reader = File.OpenText(@".\Activities.csv"))
-            using(var csvReader = new CsvHelper.CsvReader(reader))
+            using(var csvReader = new CsvHelper.CsvReader(reader, csvConfig))
             {
                 var activities = csvReader.GetRecords<Activity>().ToList();
                 var edgeDefinitions = File.ReadAllLines(@".\Relationships.csv").Skip(1).ToArray();
